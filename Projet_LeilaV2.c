@@ -118,6 +118,32 @@ char* decrypter(int decalage, char nomFichier[]){
 	return texteDecrypte;
 }
 
+char* conversion_en_binaire(char caracter){
+	int code_ASCII = 0;
+	char static binaire[7] = "";
+	char deux_bit[7] = "00";
+	char un_bit[7] = "0";
+
+
+	code_ASCII = (int)caracter;
+	if(code_ASCII <= 63){           // condition if qui cherche si il faut rajouter un zéro ou deux au début du binaire
+		itoa(code_ASCII,binaire,2); // fonction qui transforme un nombre de base 10 en base spécifié
+		strrev(binaire);            // il faut inverser la chaine pour concaténer car la concaténation ne se fait que par l'extémiter droite de la première chaine
+		strcat(binaire,deux_bit);   // ajout de deux zéro
+		strrev(binaire);            // On doit alors redonner son sens original à la chaine
+		return binaire;
+		}
+	else{
+		itoa(code_ASCII,binaire,2);  // idem que pour le premier if
+		strrev(binaire);
+	    strcat(binaire,un_bit);     // ajout d'un zéro
+	    strrev(binaire);
+		return binaire;
+	}
+}
+
+
+
 void procedure_choix_1(){
 	char texte[7] = "";
 	char pwd[15] = "";
@@ -125,17 +151,24 @@ void procedure_choix_1(){
 	char* texteDuFichier;
 	char* texteEncrypte;
 	char* texteDuFichierCrypte;
+	int i;
 
-	printf("Veillez entrer un décalage : \n");
-	scanf("%d",&decalage);
 
+	while(decalage >= 10 || decalage <= 1){
+		printf("Veillez entrer un décalage (supérieur à 1 et inférieur à 10): \n");
+		scanf("%d",&decalage);
+	}
 	printf("Veillez entrer le mot de passe : \n");
 	scanf("%s",pwd);
 
-	printf("Le mot de passe est : %s\n",pwd);
-	printf("Le décalage est : %d\n",decalage);
-
 	if(strcmp(pwd,"08re4VqZCbGhA7YZ") == 0){  //strvmp est une fonction qui compare 2 chaine et retourne 0 si elle sont identique
+		char pwdEnBinaire[144];
+		for(i=0;i< 16;i++){
+			strcat(pwdEnBinaire,conversion_en_binaire(pwd[i]));
+			strcat(pwdEnBinaire," ");
+		}
+		printf(" en binaire c'est :\n %s\n",pwdEnBinaire);
+
 		printf("écrivez le message que vous souhaitez crypter : \n");
 		scanf("%[^>]s",texte);
 		ecrireDansLeFichier(texte,"C:/Users/Lagaillarde/eclipse-workspace/Projet_LeilaV2/chemisette.txt");
@@ -158,9 +191,10 @@ void procedure_choix_2(){
 	int decalage = 0;
 	char* texteDecrypte;
 
-	printf("Veillez entrer un décalage : \n");
-	scanf("%d",&decalage);
-
+	while(decalage >= 10 || decalage <= 1){
+		printf("Veillez entrer un décalage (supérieur à 1 et inférieur à 10): \n");
+		scanf("%d",&decalage);
+	}
 	printf("Veillez entrer le mot de passe : \n");
 	scanf("%s",pwd);
 
